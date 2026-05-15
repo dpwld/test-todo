@@ -1,0 +1,337 @@
+/* =====================================================================
+ * demodev Design Kit — Foundational tokens
+ * Source of truth: demodev-lab/design-system (HeroUI v3 + Tailwind v4)
+ *                  demodev Design Kit.fig
+ * ===================================================================== */
+
+/* ---------- Webfonts -----------------------------------------------------
+ * Primary: Pretendard Variable (Korean-first variable sans, 100–900).
+ *          Hosted on jsDelivr — the same source the design system uses.
+ * Display: Hakgyoansim Allimjang (school-handwriting feel) — used ONLY
+ *          for section labels in purple. No public CDN; substituted with
+ *          Google Fonts "Gaegu" (a similar Korean handwriting face).
+ *          Flag: ask user for the original .otf to replace.
+ * Mono:    SF Mono is system-only on macOS; falls back to JetBrains Mono.
+ * --------------------------------------------------------------------- */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  /* =========================================================== *
+   * COLOR — Gray scale (oklch, 11 step)                          *
+   * Source: packages/core/src/styles/theme/colors.css            *
+   * =========================================================== */
+  --color-gray-50:  oklch(97.3% 0.001 287.31deg);
+  --color-gray-100: oklch(94.0% 0.001 287.27deg);
+  --color-gray-200: oklch(85.2% 0.004 286.57deg);
+  --color-gray-300: oklch(75.8% 0.006 286.43deg);
+  --color-gray-400: oklch(67.2% 0.009 286.26deg);
+  --color-gray-500: oklch(58.5% 0.011 286.14deg);
+  --color-gray-600: oklch(49.2% 0.013 285.97deg);
+  --color-gray-700: oklch(40.5% 0.013 285.83deg);
+  --color-gray-800: oklch(31.9% 0.011 285.82deg);
+  --color-gray-900: oklch(22.4% 0.008 285.80deg);
+  --color-gray-950: oklch(17.9% 0.004 286.04deg);
+
+  /* Common */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* =========================================================== *
+   * Brand accent (SWAPPABLE per project — keep step structure)   *
+   * Default = "demodev blue" used across the kit.                *
+   * =========================================================== */
+  --color-accent-50:  #eff6ff;
+  --color-accent-100: #e7f1fe;   /* accent-soft */
+  --color-accent-200: #c5dafb;
+  --color-accent-300: #94bcf9;
+  --color-accent-400: #5d9bf6;
+  --color-accent-500: #1571f3;   /* accent */
+  --color-accent-600: #0b4899;   /* accent-pressed / text on soft */
+  --color-accent-700: #093572;
+  --color-accent-800: #08284e;
+  --color-accent-900: #061a32;
+
+  --color-accent:                  var(--color-accent-500);
+  --color-accent-soft:             var(--color-accent-100);
+  --color-accent-soft-hover:       #d6e6fd;
+  --color-accent-soft-foreground:  var(--color-accent-600);
+
+  /* =========================================================== *
+   * Semantic colors                                              *
+   * =========================================================== */
+  --color-success:               #27c961;
+  --color-success-soft:          #e4faea;
+  --color-success-soft-hover:    #d2f5dc;
+  --color-success-soft-foreground:#147a3a;
+
+  --color-warning:               #ffdc18;
+  --color-warning-soft:          #fff8d4;
+  --color-warning-soft-hover:    #fff1a8;
+  --color-warning-soft-foreground:#7a5a00;
+
+  --color-danger:                #ef1026;
+  --color-danger-soft:           #fee8ea;
+  --color-danger-soft-hover:     #fcd2d6;
+  --color-danger-soft-foreground:#a30817;
+
+  /* Section-label display color (Hakgyoansim purple) */
+  --color-display-accent: #b38ae6;
+
+  /* =========================================================== *
+   * Opacity scales (used for overlays, dividers, scrims)         *
+   * =========================================================== */
+  --opacity-gray-50:  rgba(24,24,27,0.03);
+  --opacity-gray-100: rgba(24,24,27,0.06);
+  --opacity-gray-200: rgba(24,24,27,0.08);
+  --opacity-gray-300: rgba(24,24,27,0.12);
+  --opacity-gray-400: rgba(24,24,27,0.16);
+  --opacity-gray-500: rgba(24,24,27,0.24);
+  --opacity-gray-600: rgba(24,24,27,0.36);
+  --opacity-gray-700: rgba(24,24,27,0.5);
+  --opacity-gray-800: rgba(24,24,27,0.7);
+  --opacity-gray-900: rgba(24,24,27,0.9);
+
+  --opacity-white-50:  rgba(255,255,255,0.03);
+  --opacity-white-100: rgba(255,255,255,0.06);
+  --opacity-white-200: rgba(255,255,255,0.08);
+  --opacity-white-300: rgba(255,255,255,0.12);
+  --opacity-white-400: rgba(255,255,255,0.16);
+  --opacity-white-500: rgba(255,255,255,0.24);
+  --opacity-white-600: rgba(255,255,255,0.36);
+  --opacity-white-700: rgba(255,255,255,0.5);
+  --opacity-white-800: rgba(255,255,255,0.7);
+  --opacity-white-900: rgba(255,255,255,0.9);
+
+  /* =========================================================== *
+   * Semantic surfaces / foreground (light mode)                  *
+   * =========================================================== */
+  --bg:            var(--color-white);
+  --bg-muted:      var(--color-gray-50);     /* page tint, table stripes */
+  --bg-subtle:     #f4f4f5;                  /* section bars */
+  --surface:       var(--color-white);
+  --surface-hover: var(--color-gray-50);
+
+  --fg:            var(--color-black);       /* primary text */
+  --fg-secondary:  var(--color-gray-600);    /* labels, captions */
+  --fg-muted:      var(--color-gray-500);    /* placeholders, hints */
+  --fg-disabled:   var(--color-gray-300);
+
+  --border:        var(--color-gray-200);
+  --border-strong: var(--color-gray-300);
+  --border-subtle: rgba(82,82,91,0.08);      /* hairline dividers */
+
+  /* =========================================================== *
+   * TYPE — Families                                              *
+   * =========================================================== */
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system,
+               BlinkMacSystemFont, "system-ui", Roboto, "Helvetica Neue",
+               "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-display: "Hakgyoansim Allimjang", "Gaegu", var(--font-sans);
+  --font-mono: "SF Mono", "JetBrains Mono", ui-monospace,
+               "Menlo", "Monaco", "Cascadia Mono", monospace;
+
+  /* =========================================================== *
+   * TYPE — Scale (Desktop / Tablet / Mobile from the Figma rules)*
+   * Use the desktop value by default; bump down at breakpoints   *
+   * if needed via --tb-* and --mb-* variants.                    *
+   * =========================================================== */
+  --text-display-01: 80px;   --lh-display-01: 1.16;
+  --text-display-02: 64px;   --lh-display-02: 1.16;
+  --text-display-03: 48px;   --lh-display-03: 1.2;
+  --text-display-04: 40px;   --lh-display-04: 1.2;
+
+  --text-heading-01: 32px;   --lh-heading-01: 1.3;
+  --text-heading-02: 28px;   --lh-heading-02: 1.3;
+  --text-heading-03: 24px;   --lh-heading-03: 1.34;
+  --text-heading-04: 22px;   --lh-heading-04: 1.34;
+  --text-heading-05: 20px;   --lh-heading-05: 1.4;
+
+  --text-body-01:    18px;   --lh-body-01: 1.5;
+  --text-body-02:    16px;   --lh-body-02: 1.5;
+  --text-body-03:    14px;   --lh-body-03: 1.5;
+
+  --text-caption-01: 12px;   --lh-caption-01: 1.45;
+  --text-caption-02: 10px;   --lh-caption-02: 1.4;
+
+  /* Weights (Pretendard Variable supports 100–900) */
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold:600;
+  --fw-bold:    700;
+
+  /* Tracking — Pretendard typically uses -1% to -2% */
+  --tracking-tight:  -0.02em;
+  --tracking-snug:   -0.01em;
+  --tracking-normal: 0em;
+
+  /* =========================================================== *
+   * RADIUS                                                       *
+   * =========================================================== */
+  --radius-xs:        0.125rem;  /* 2px */
+  --radius-sm:        0.25rem;   /* 4px */
+  --radius-md:        0.375rem;  /* 6px */
+  --radius-lg:        0.5rem;    /* 8px */
+  --radius-lg-plus:   0.625rem;  /* 10px — buttons */
+  --radius-xl:        0.75rem;   /* 12px */
+  --radius-2xl:       1rem;      /* 16px */
+  --radius-2xl-plus:  1.25rem;   /* 20px */
+  --radius-3xl:       1.5rem;    /* 24px */
+  --radius-full:      9999px;
+
+  /* Component radius aliases */
+  --radius-button-xs: var(--radius-md);
+  --radius-button-sm: var(--radius-lg);
+  --radius-button-md: var(--radius-lg-plus);
+  --radius-button-lg: var(--radius-xl);
+  --radius-chip-sm:   var(--radius-md);
+  --radius-chip-md:   var(--radius-lg);
+  --radius-chip-lg:   var(--radius-button-sm);
+  --radius-input-lg:  var(--radius-button-lg);
+  --radius-list-box:  var(--radius-xl);
+  --radius-list-box-item: var(--radius-lg);
+  --radius-toast:     var(--radius-2xl);
+  --radius-card:      var(--radius-2xl);
+
+  /* =========================================================== *
+   * SPACING (4px grid; values match Tailwind defaults)           *
+   * =========================================================== */
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  28px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* Component heights (HeroUI tokens) */
+  --h-button-sm: 36px;
+  --h-button-md: 40px;
+  --h-button-lg: 48px;
+  --h-chip-sm:   24px;
+  --h-chip-md:   32px;
+  --h-chip-lg:   36px;
+  --h-input-lg:  48px;
+
+  /* Icon sizes */
+  --icon-xs: 14px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+
+  /* =========================================================== *
+   * SHADOW — Tailwind-style scale (per Figma "참고 - tailwindcss UI") *
+   * =========================================================== */
+  --shadow-xs:  0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-sm:  0 1px 3px 0 rgba(0,0,0,0.10), 0 1px 2px -1px rgba(0,0,0,0.10);
+  --shadow-md:  0 4px 6px -1px rgba(0,0,0,0.10), 0 2px 4px -2px rgba(0,0,0,0.10);
+  --shadow-lg:  0 10px 15px -3px rgba(0,0,0,0.10), 0 4px 6px -4px rgba(0,0,0,0.10);
+  --shadow-xl:  0 20px 25px -5px rgba(0,0,0,0.10), 0 8px 10px -6px rgba(0,0,0,0.10);
+  --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.25);
+  --shadow-overlay: 0 32px 64px -16px rgba(0,0,0,0.30);
+
+  /* Inner shadow used by inputs / pressed states */
+  --shadow-inset-press: inset 0 1px 2px 0 rgba(0,0,0,0.06);
+
+  /* =========================================================== *
+   * MOTION                                                       *
+   * =========================================================== */
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);   /* HeroUI default */
+  --easing-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --easing-out: cubic-bezier(0, 0, 0.2, 1);
+
+  --dur-instant: 80ms;
+  --dur-fast:    120ms;
+  --dur-base:    200ms;
+  --dur-slow:    320ms;
+
+  /* =========================================================== *
+   * Z-INDEX                                                      *
+   * =========================================================== */
+  --z-dropdown: 1000;
+  --z-sticky:   1100;
+  --z-overlay:  1200;
+  --z-modal:    1300;
+  --z-popover:  1400;
+  --z-toast:    1500;
+}
+
+/* =========================================================== *
+ * Dark mode mirror (per /Color-System/History "라이트/다크 대응")
+ * Light: surface-50 + accent-500 + text-600                    *
+ * Dark : surface-900 + accent-500 + text-200                   *
+ * =========================================================== */
+[data-theme="dark"], .dark {
+  --bg:            var(--color-gray-950);
+  --bg-muted:      var(--color-gray-900);
+  --bg-subtle:     var(--color-gray-800);
+  --surface:       var(--color-gray-900);
+  --surface-hover: var(--color-gray-800);
+
+  --fg:            var(--color-white);
+  --fg-secondary:  var(--color-gray-200);
+  --fg-muted:      var(--color-gray-400);
+  --fg-disabled:   var(--color-gray-700);
+
+  --border:        var(--color-gray-700);
+  --border-strong: var(--color-gray-600);
+  --border-subtle: var(--opacity-white-200);
+}
+
+/* =====================================================================
+ *  Semantic typographic classes — what you actually write in markup.
+ *  Component selectors (.btn, .chip) live in components.css, not here.
+ * ===================================================================== */
+
+html { font-family: var(--font-sans); color: var(--fg); background: var(--bg); }
+body { font-family: var(--font-sans); }
+
+/* Display — hero pages, marketing */
+.display-01 { font: var(--fw-bold)    var(--text-display-01)/var(--lh-display-01) var(--font-sans); letter-spacing: var(--tracking-tight); }
+.display-02 { font: var(--fw-bold)    var(--text-display-02)/var(--lh-display-02) var(--font-sans); letter-spacing: var(--tracking-tight); }
+.display-03 { font: var(--fw-bold)    var(--text-display-03)/var(--lh-display-03) var(--font-sans); letter-spacing: var(--tracking-snug); }
+.display-04 { font: var(--fw-bold)    var(--text-display-04)/var(--lh-display-04) var(--font-sans); letter-spacing: var(--tracking-snug); }
+
+/* Section label (handwritten, purple) — the kit's signature touch */
+.section-label {
+  font: 400 50px/1 var(--font-display);
+  color: var(--color-display-accent);
+  letter-spacing: 0;
+}
+
+/* Heading */
+.h1, .heading-01 { font: var(--fw-bold)     var(--text-heading-01)/var(--lh-heading-01) var(--font-sans); letter-spacing: var(--tracking-snug); }
+.h2, .heading-02 { font: var(--fw-bold)     var(--text-heading-02)/var(--lh-heading-02) var(--font-sans); letter-spacing: var(--tracking-snug); }
+.h3, .heading-03 { font: var(--fw-semibold) var(--text-heading-03)/var(--lh-heading-03) var(--font-sans); letter-spacing: var(--tracking-snug); }
+.h4, .heading-04 { font: var(--fw-semibold) var(--text-heading-04)/var(--lh-heading-04) var(--font-sans); letter-spacing: var(--tracking-snug); }
+.h5, .heading-05 { font: var(--fw-semibold) var(--text-heading-05)/var(--lh-heading-05) var(--font-sans); letter-spacing: var(--tracking-snug); }
+
+/* Body */
+.body-01, .lead { font: var(--fw-regular)  var(--text-body-01)/var(--lh-body-01) var(--font-sans); }
+.body-02, p, .body { font: var(--fw-regular) var(--text-body-02)/var(--lh-body-02) var(--font-sans); }
+.body-03, small  { font: var(--fw-regular)  var(--text-body-03)/var(--lh-body-03) var(--font-sans); }
+
+/* Caption */
+.caption-01 { font: var(--fw-medium) var(--text-caption-01)/var(--lh-caption-01) var(--font-sans); color: var(--fg-secondary); }
+.caption-02 { font: var(--fw-medium) var(--text-caption-02)/var(--lh-caption-02) var(--font-sans); color: var(--fg-secondary); }
+
+/* Inline code / data */
+code, kbd, .mono { font-family: var(--font-mono); font-size: 0.95em; }
+
+/* Base h-tag mapping */
+h1 { font: var(--fw-bold)     var(--text-display-04)/var(--lh-display-04) var(--font-sans); letter-spacing: var(--tracking-snug); }
+h2 { font: var(--fw-bold)     var(--text-heading-01)/var(--lh-heading-01) var(--font-sans); letter-spacing: var(--tracking-snug); }
+h3 { font: var(--fw-semibold) var(--text-heading-03)/var(--lh-heading-03) var(--font-sans); letter-spacing: var(--tracking-snug); }
+h4 { font: var(--fw-semibold) var(--text-heading-05)/var(--lh-heading-05) var(--font-sans); letter-spacing: var(--tracking-snug); }
+h5 { font: var(--fw-semibold) var(--text-body-01)/var(--lh-body-01) var(--font-sans); }
+
+/* Link */
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
