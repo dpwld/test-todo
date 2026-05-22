@@ -8,6 +8,7 @@
 
 import { useRouter } from 'next/navigation';
 import type { CategoryId, ViewId } from '@/lib/types';
+import { LogoutButton } from '@/components/shared/LogoutButton';
 import { useTasks } from '@/context/TasksProvider';
 import { CATEGORIES, VIEWS } from '@/lib/store/sample-data';
 import { viewCount, catCount } from '@/lib/store/selectors';
@@ -124,6 +125,7 @@ export function SideNav({ activeView, activeCat, activeRoute }: SideNavProps) {
 
       <div className="nav__footer" style={{ marginTop: 'auto', paddingTop: 8 }}>
         <ThemeToggle />
+        <LogoutButton />
       </div>
     </aside>
   );

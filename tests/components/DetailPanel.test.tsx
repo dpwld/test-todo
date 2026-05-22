@@ -1,28 +1,54 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DetailPanel } from '@/components/main/DetailPanel';
 import { TasksProvider } from '@/context/TasksProvider';
+import { SAMPLE_TASKS } from '@/lib/store/sample-data';
+
+vi.mock('@/context/AuthProvider', () => ({
+  AuthProvider: ({ children }: { children: unknown }) => children,
+  useAuth: () => ({
+    user: { id: 'user-1', email: 'test@example.com' },
+    loading: false,
+    signIn: vi.fn(),
+    signUp: vi.fn(),
+    signInWithGoogle: vi.fn(),
+    signOut: vi.fn(),
+  }),
+}));
+
+vi.mock('@/utils/supabase/client', () => ({
+  createClient: () => ({
+    from: () => ({
+      select: vi.fn().mockResolvedValue({ data: SAMPLE_TASKS, error: null }),
+      insert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      update: () => ({ eq: vi.fn().mockResolvedValue({ data: null, error: null }) }),
+      delete: () => ({ eq: vi.fn().mockResolvedValue({ data: null, error: null }) }),
+    }),
+  }),
+}));
 
 const onClearSelection = vi.fn();
 beforeEach(() => onClearSelection.mockClear());
 
-function renderDetail(selectedId: string | null) {
-  return render(
+async function renderDetail(selectedId: string | null) {
+  const result = render(
     <TasksProvider>
       <DetailPanel selectedId={selectedId} onClearSelection={onClearSelection} />
     </TasksProvider>,
   );
+  await act(async () => {});
+  return result;
 }
 
 describe('DetailPanel', () => {
-  it('shows the empty state when nothing is selected', () => {
-    renderDetail(null);
+  it('shows the empty state when nothing is selected', async () => {
+    await renderDetail(null);
     expect(screen.getByText('선택된 할 일이 없습니다')).toBeInTheDocument();
   });
 
-  it('renders the selected task: title, due, priority, category', () => {
-    renderDetail('t1');
+  it('renders the selected task: title, due, priority, category', async () => {
+    await renderDetail('t1');
     expect(
       screen.getByDisplayValue('Q4 디자인 시스템 토큰 마이그레이션 리뷰'),
     ).toBeInTheDocument();
@@ -32,7 +58,7 @@ describe('DetailPanel', () => {
   });
 
   it('edits the title', async () => {
-    renderDetail('t1');
+    await renderDetail('t1');
     const title = screen.getByDisplayValue(
       'Q4 디자인 시스템 토큰 마이그레이션 리뷰',
     );
@@ -42,14 +68,14 @@ describe('DetailPanel', () => {
   });
 
   it('edits notes', async () => {
-    renderDetail('t2'); // t2 starts with empty notes
+    await renderDetail('t2'); // t2 starts with empty notes
     const notes = screen.getByPlaceholderText(/메모를 남겨두세요/);
     await userEvent.type(notes, '새 메모');
     expect(screen.getByDisplayValue('새 메모')).toBeInTheDocument();
   });
 
   it('changes priority via the inline popover', async () => {
-    renderDetail('t1'); // priority high
+    await renderDetail('t1'); // priority high
     await userEvent.click(screen.getByRole('button', { name: /우선순위/ }));
     await userEvent.click(screen.getByRole('option', { name: /낮음/ }));
     expect(
@@ -58,7 +84,7 @@ describe('DetailPanel', () => {
   });
 
   it('changes category via the inline popover', async () => {
-    renderDetail('t1'); // category design
+    await renderDetail('t1'); // category design
     await userEvent.click(screen.getByRole('button', { name: /카테고리/ }));
     await userEvent.click(screen.getByRole('option', { name: /개발/ }));
     expect(
@@ -67,7 +93,7 @@ describe('DetailPanel', () => {
   });
 
   it('adds, toggles, and deletes subtasks', async () => {
-    renderDetail('t1');
+    await renderDetail('t1');
     // add
     const subInput = screen.getByPlaceholderText('서브태스크 추가');
     await userEvent.type(subInput, '새 서브태스크{Enter}');
@@ -92,20 +118,20 @@ describe('DetailPanel', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('shows the subtask progress bar when subtasks exist', () => {
-    renderDetail('t1'); // 4 subs, 2 done
+  it('shows the subtask progress bar when subtasks exist', async () => {
+    await renderDetail('t1'); // 4 subs, 2 done
     expect(screen.getByText('2 / 4')).toBeInTheDocument();
   });
 
   it('deletes the task and clears the selection', async () => {
-    renderDetail('t1');
+    await renderDetail('t1');
     await userEvent.click(screen.getByRole('button', { name: '삭제' }));
     expect(onClearSelection).toHaveBeenCalledTimes(1);
     expect(screen.getByText('선택된 할 일이 없습니다')).toBeInTheDocument();
   });
 
   it('toggles the star', async () => {
-    renderDetail('t1'); // starred: true
+    await renderDetail('t1'); // starred: true
     const star = screen.getByRole('button', { name: '즐겨찾기' });
     expect(star).toHaveAttribute('aria-pressed', 'true');
     await userEvent.click(star);

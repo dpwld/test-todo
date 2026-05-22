@@ -1,37 +1,34 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: (template) → 1.0.0
-Bump rationale: Initial ratification — first concrete constitution replacing the
-  unfilled template. MAJOR baseline.
+Version change: 1.0.0 → 2.0.0
+Bump rationale: MAJOR — backward-incompatible governance change.
+  "No backend / localStorage only" constraint removed; Supabase (PostgreSQL)
+  added as the persistence layer. This redefines Principle III and the
+  Technology Constraints section in a non-backward-compatible way.
 
 Modified principles:
-  [PRINCIPLE_1_NAME] → I. Test-First (NON-NEGOTIABLE)
-  [PRINCIPLE_2_NAME] → II. Design Fidelity
-  [PRINCIPLE_3_NAME] → III. Simplicity & YAGNI
-  [PRINCIPLE_4_NAME] → IV. Component Modularity
-  [PRINCIPLE_5_NAME] → V. Accessibility
+  III. Simplicity & YAGNI — persistence clause updated:
+    "localStorage only / No backend" → Supabase via src/utils/supabase/ helpers.
 
-Added sections:
-  - Technology Constraints (was [SECTION_2_NAME])
-  - Development Workflow (was [SECTION_3_NAME])
+Modified sections:
+  Technology Constraints — "Persistence: localStorage only. No server, no database,
+    no external API." replaced with Supabase + @supabase/supabase-js + @supabase/ssr.
 
+Added sections: none
 Removed sections: none
 
 Templates requiring updates:
-  ✅ .specify/templates/plan-template.md — generic "Constitution Check" gate, no
-     edit needed; /speckit-plan fills it against these principles.
-  ✅ .specify/templates/spec-template.md — generic; tests are requested explicitly
-     in the spec to satisfy Principle I.
-  ✅ .specify/templates/tasks-template.md — generic; tests are non-optional for
-     this project per Principle I and will be requested in the spec.
+  ✅ .specify/templates/plan-template.md — generic; no edit needed.
+  ✅ .specify/templates/spec-template.md — generic; no edit needed.
+  ✅ .specify/templates/tasks-template.md — generic; no edit needed.
 
 Follow-up TODOs: none
 -->
 
 # demodev Tasks Constitution
 
-/ 한국어 Todo 웹앱 — Claude Design 핸드오프 번들의 프로덕션 구현
+강의 실습용 한국어 Todo 웹앱 — Supabase 백엔드 연동 프로덕션 구현
 
 ## Core Principles
 
@@ -76,14 +73,17 @@ do not copy the prototype's internal structure.
 
 Build only what is specified. No speculative generality.
 
-- No backend. Persistence is `localStorage` only; sample data seeds first run.
+- Persistence is handled via **Supabase (PostgreSQL)**. Use `@supabase/supabase-js`
+  and `@supabase/ssr` through the helpers in `src/utils/supabase/`. Direct SDK
+  calls outside these helpers are NOT permitted.
 - No features beyond the spec — no abstractions for single-use code, no config
   surface that was not requested, no error handling for impossible states.
 - Prefer the smallest code that satisfies a passing test. If it can be 50 lines,
   it is not 200.
 
-Rationale: the scope is a faithful, interactive reproduction of a fixed design —
-not a platform. Extra surface area is pure cost.
+Rationale: Supabase replaces the localStorage-only constraint to support
+server-side rendering and multi-device persistence as required by the lecture
+curriculum. Simplicity still applies — only use what the spec calls for.
 
 ### IV. Component Modularity
 
@@ -116,12 +116,16 @@ Rationale: the prototype already encodes these affordances; regressing them in t
 
 ## Technology Constraints
 
-- **Framework**: Next.js (App Router).
+- **Framework**: Next.js 15 (App Router).
 - **Language**: TypeScript — strict mode; no implicit `any` in committed code.
 - **Testing**: Vitest + React Testing Library; jsdom environment.
 - **Styling**: CSS carrying the demodev design tokens; no CSS framework that would
   re-derive the token scales.
-- **Persistence**: `localStorage` only. No server, no database, no external API.
+- **Persistence**: Supabase (PostgreSQL) via `@supabase/supabase-js` +
+  `@supabase/ssr`. Client helpers live in `src/utils/supabase/`
+  (`server.ts`, `client.ts`, `middleware.ts`).
+- **Environment**: `NEXT_PUBLIC_SUPABASE_URL` and
+  `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` MUST be present in `.env.local`.
 - **Fonts**: Pretendard Variable + Gaegu + JetBrains Mono via the existing CDN
   `@import`s in `colors_and_type.css`.
 - **Demo clock**: "today" is pinned to 2026-05-15 to keep relative-date logic and
@@ -156,4 +160,4 @@ Rationale: the prototype already encodes these affordances; regressing them in t
   principles; any complexity that violates a principle MUST be justified in the
   plan's Complexity Tracking table or removed.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-15 | **Last Amended**: 2026-05-15
+**Version**: 2.0.0 | **Ratified**: 2026-05-15 | **Last Amended**: 2026-05-22

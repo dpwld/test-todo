@@ -1,9 +1,33 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SideNav } from '@/components/shared/SideNav';
 import { TasksProvider } from '@/context/TasksProvider';
 import { ThemeProvider } from '@/context/ThemeProvider';
+import { SAMPLE_TASKS } from '@/lib/store/sample-data';
+
+vi.mock('@/context/AuthProvider', () => ({
+  AuthProvider: ({ children }: { children: unknown }) => children,
+  useAuth: () => ({
+    user: { id: 'user-1', email: 'test@example.com' },
+    loading: false,
+    signIn: vi.fn(),
+    signUp: vi.fn(),
+    signInWithGoogle: vi.fn(),
+    signOut: vi.fn(),
+  }),
+}));
+
+vi.mock('@/utils/supabase/client', () => ({
+  createClient: () => ({
+    from: () => ({
+      select: vi.fn().mockResolvedValue({ data: SAMPLE_TASKS, error: null }),
+      insert: vi.fn().mockResolvedValue({ data: null, error: null }),
+      update: () => ({ eq: vi.fn().mockResolvedValue({ data: null, error: null }) }),
+      delete: () => ({ eq: vi.fn().mockResolvedValue({ data: null, error: null }) }),
+    }),
+  }),
+}));
 
 const { push } = vi.hoisted(() => ({ push: vi.fn() }));
 vi.mock('next/navigation', () => ({
@@ -12,19 +36,21 @@ vi.mock('next/navigation', () => ({
 
 beforeEach(() => push.mockClear());
 
-function renderNav(props: Parameters<typeof SideNav>[0] = {}) {
-  return render(
+async function renderNav(props: Parameters<typeof SideNav>[0] = {}) {
+  const result = render(
     <ThemeProvider>
       <TasksProvider>
         <SideNav {...props} />
       </TasksProvider>
     </ThemeProvider>,
   );
+  await act(async () => {});
+  return result;
 }
 
 describe('SideNav', () => {
-  it('renders the 5 view items, 캘린더, 통계, and 5 category items', () => {
-    renderNav();
+  it('renders the 5 view items, 캘린더, 통계, and 5 category items', async () => {
+    await renderNav();
     ['받은편지함', '오늘', '예정', '지연', '완료'].forEach((name) => {
       expect(screen.getByRole('button', { name: new RegExp(name) })).toBeInTheDocument();
     });
@@ -35,49 +61,49 @@ describe('SideNav', () => {
     });
   });
 
-  it('shows the count badge for the 오늘 view (5 from the sample data)', () => {
-    renderNav();
+  it('shows the count badge for the 오늘 view (5 from the sample data)', async () => {
+    await renderNav();
     expect(screen.getByRole('button', { name: /오늘/ })).toHaveTextContent('5');
   });
 
-  it('marks the active view item', () => {
-    renderNav({ activeView: 'today' });
+  it('marks the active view item', async () => {
+    await renderNav({ activeView: 'today' });
     expect(screen.getByRole('button', { name: /오늘/ })).toHaveClass('is-active');
     expect(screen.getByRole('button', { name: /예정/ })).not.toHaveClass('is-active');
   });
 
-  it('marks the active route item (calendar)', () => {
-    renderNav({ activeRoute: 'calendar' });
+  it('marks the active route item (calendar)', async () => {
+    await renderNav({ activeRoute: 'calendar' });
     expect(screen.getByRole('button', { name: /캘린더/ })).toHaveClass('is-active');
   });
 
-  it('marks the active category item', () => {
-    renderNav({ activeCat: 'design' });
+  it('marks the active category item', async () => {
+    await renderNav({ activeCat: 'design' });
     expect(screen.getByRole('button', { name: /디자인/ })).toHaveClass('is-active');
   });
 
   it('navigates to /main with the view query when a view item is clicked', async () => {
-    renderNav();
+    await renderNav();
     await userEvent.click(screen.getByRole('button', { name: /예정/ }));
     expect(push).toHaveBeenCalledWith('/main?view=upcoming');
   });
 
   it('navigates to /main with the cat query when a category is clicked', async () => {
-    renderNav();
+    await renderNav();
     await userEvent.click(screen.getByRole('button', { name: /디자인/ }));
     expect(push).toHaveBeenCalledWith('/main?cat=design');
   });
 
   it('navigates to /calendar and /stats from those items', async () => {
-    renderNav();
+    await renderNav();
     await userEvent.click(screen.getByRole('button', { name: /캘린더/ }));
     expect(push).toHaveBeenCalledWith('/calendar');
     await userEvent.click(screen.getByRole('button', { name: /통계/ }));
     expect(push).toHaveBeenCalledWith('/stats');
   });
 
-  it('renders the theme toggle in the footer', () => {
-    renderNav();
+  it('renders the theme toggle in the footer', async () => {
+    await renderNav();
     expect(
       screen.getByRole('switch', { name: /테마/ }),
     ).toBeInTheDocument();
